@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 
 export const config = { path: '/api/*' };
 
-const MAX = 170, LIM = { among: 120, mafia: 50 };
+const MAX = 170, LIM = { among: 95, mafia: 75 };
 const USER = process.env.ADMIN_USER || 'Levi', PASS = process.env.ADMIN_PASS || 'Levi0321';
 const SECRET = process.env.SECRET || crypto.createHash('sha256').update('amongus|' + PASS).digest('hex');
 const DEADLINE = Date.UTC(2026, 10, 16, 18, 59, 59); // 16 Nov 2026 23:59:59 Pakistan time
@@ -44,8 +44,8 @@ const migrate = S => mig || (mig = (async () => {
 const fullMsg = (c, g) => {
   const a = g !== 'mafia' && c.among >= LIM.among, m = g !== 'among' && c.mafia >= LIM.mafia;
   if (a && m) return 'Both games are sold out.';
-  if (a) return g === 'both' ? 'Among Us is sold out (120/120). You can still pick Mafia Wars only.' : 'Among Us is sold out (120/120).';
-  if (m) return g === 'both' ? 'Mafia Wars is sold out (50/50). You can still pick Among Us only.' : 'Mafia Wars is sold out (50/50).';
+  if (a) return g === 'both' ? 'Among Us is sold out (' + LIM.among + '/' + LIM.among + '). You can still pick Mafia Wars only.' : 'Among Us is sold out (' + LIM.among + '/' + LIM.among + ').';
+  if (m) return g === 'both' ? 'Mafia Wars is sold out (' + LIM.mafia + '/' + LIM.mafia + '). You can still pick Among Us only.' : 'Mafia Wars is sold out (' + LIM.mafia + '/' + LIM.mafia + ').';
   return '';
 };
 
