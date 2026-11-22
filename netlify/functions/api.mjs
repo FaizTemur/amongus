@@ -23,6 +23,9 @@ const idOf = r => r.replace(/[^A-Z0-9]/g, '-');
 const price = g => PR[g][Date.now() <= DEADLINE ? 0 : 1];
 const kk = (s, g, id) => s + '/' + g + '/' + id;
 const tries = {};
+const NEED = 5, ALPHA = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // 5 verified referrals = free registration
+async function newCode(S) { for (;;) { let c = 'SFS'; for (let i = 0; i < 4; i++) c += ALPHA[crypto.randomInt(ALPHA.length)]; if (!(await S.get('ref/' + c, { type: 'json' }))) return c; } }
+async function acceptedRecs(S) { const ks = await keys(S, 'accepted'); return (await Promise.all(ks.map(k => S.get(k, { type: 'json' })))).filter(Boolean); }
 
 async function find(S, id) { const r = await Promise.all(ST.flatMap(s => GAMES.map(g => S.get(kk(s, g, id), { type: 'json' })))); return r.find(Boolean) || null; }
 async function keys(S, s) { return (await S.list({ prefix: s + '/' })).blobs.map(b => b.key); }
@@ -39,6 +42,14 @@ const migrate = S => mig || (mig = (async () => {
     const r = await S.get(k, { type: 'json' }); if (!r) continue;
     r.game = GAMES.includes(r.game) ? r.game : 'among';
     await S.setJSON(kk(s, r.game, r.id), r); await S.delete(k);
+  }
+  // give every older registration a referral code (once)
+  if (!(await S.get('meta/refs-done'))) {
+    for (const s of ST) for (const k of await keys(S, s)) {
+      const r = await S.get(k, { type: 'json' }); if (!r || r.refCode) continue;
+      r.refCode = await newCode(S); await S.setJSON('ref/' + r.refCode, { id: r.id }); await S.setJSON(k, r);
+    }
+    await S.set('meta/refs-done', '1');
   }
 })().catch(() => { mig = null; }));
 const fullMsg = (c, g) => {
@@ -61,12 +72,22 @@ export default async (req) => {
     }
     if (m === 'GET' && p === '/api/status') {
       const r = await find(S, idOf(norm(u.searchParams.get('roll'))));
-      return r ? J({ status: r.status, name: r.name, game: r.game }) : J({ error: 'No registration found for that roll number.' }, 404);
+      if (!r) return J({ error: 'No registration found for that roll number.' }, 404);
+      const refs = (await acceptedRecs(S)).filter(x => x.referredBy === r.refCode).length;
+      return J({ status: r.status, name: r.name, game: r.game, refCode: r.refCode, refs, need: NEED, reward: !!r.rewardGiven });
     }
     if (m === 'POST' && p === '/api/register') {
       if (+req.headers.get('content-length') > 5e6) return J({ error: 'Image too large.' }, 413);
-      const b = await req.json(), name = String(b.name || '').trim().slice(0, 80), roll = norm(b.roll).slice(0, 30), id = idOf(roll), game = String(b.game || ''), phone = normPhone(b.phone);
+      const b = await req.json(), name = String(b.name || '').trim().slice(0, 80), roll = norm(b.roll).slice(0, 30), id = idOf(roll), game = String(b.game || ''), phone = normPhone(b.phone), ref = String(b.ref || '').trim().toUpperCase(), src = String(b.src || ''), srcOther = String(b.srcOther || '').trim().slice(0, 200);
       if (!phone) return J({ error: 'Enter a valid Pakistani mobile number, e.g. 0300 1234567.' }, 400);
+      if (!['social', 'c2c', 'posters', 'desk', 'other'].includes(src)) return J({ error: 'Tell us how you heard about the event.' }, 400);
+      if (src === 'other' && srcOther.length < 2) return J({ error: 'Please explain how you heard about us.' }, 400);
+      let leader = null;
+      if (ref) {
+        const x = await S.get('ref/' + ref, { type: 'json' }); leader = x && await find(S, x.id);
+        if (!leader || leader.status === 'rejected') return J({ error: 'Referral code not found. Check it, or leave it empty.' }, 400);
+        if (leader.roll === roll || leader.phone === phone) return J({ error: 'You can’t use your own referral code.' }, 400);
+      }
       const pr = String(b.proof || ''), i = pr.indexOf(','), mt = /^data:image\/(jpeg|png|webp);base64$/.exec(pr.slice(0, i));
       if (name.length < 3 || roll.length < 4 || !mt || !Object.hasOwn(PR, game)) return J({ error: 'Fill every field, pick a game and attach an image as payment proof.' }, 400);
       const fm = fullMsg(await counts(S), game); if (fm) return J({ error: fm }, 409);
@@ -76,7 +97,8 @@ export default async (req) => {
       if (buf.length < 500 || buf.length > 4.5e6) return J({ error: 'Proof image is invalid or too large.' }, 400);
       if (ex) await S.delete(kk('rejected', ex.game, id));
       await S.set('p/' + id, buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
-      const rec = { id, name, roll, phone, price: price(game), game, status: 'pending', at: Date.now(), type: mt[1] };
+      const rec = { id, name, roll, phone, price: price(game), game, status: 'pending', at: Date.now(), type: mt[1], refCode: (ex && ex.refCode) || await newCode(S), referredBy: leader ? ref : '', leaderRoll: leader ? leader.roll : '', source: src, sourceOther: src === 'other' ? srcOther : '' };
+      await S.setJSON('ref/' + rec.refCode, { id });
       await S.setJSON(kk('pending', game, id), rec);
       // race guard: if simultaneous signups overshot a game's cap, the latest ones lose
       const c2 = await counts(S);
@@ -86,7 +108,7 @@ export default async (req) => {
         const recs = (await Promise.all(ks.map(x => S.get(x, { type: 'json' })))).filter(Boolean).sort((a, c) => a.at - c.at || a.id.localeCompare(c.id));
         if (recs.findIndex(r => r.id === id) >= LIM[g]) { await S.delete(kk('pending', game, id)); return J({ error: (g === 'among' ? 'Among Us' : 'Mafia Wars') + ' just sold out. Sorry!' }, 409); }
       }
-      return J({ ok: true, id, price: rec.price, game, count: c2.among + c2.mafia });
+      return J({ ok: true, id, price: rec.price, game, refCode: rec.refCode, count: c2.among + c2.mafia });
     }
     if (m === 'POST' && p === '/api/admin/login') {
       const ip = req.headers.get('x-nf-client-connection-ip') || 'x', t = tries[ip] = (tries[ip] || []).filter(x => x > Date.now() - 6e4);
@@ -99,7 +121,7 @@ export default async (req) => {
       if (!authed()) return J({ error: 'Not logged in.' }, 401);
       if (m === 'GET' && p === '/api/admin/regs') {
         const all = (await Promise.all(ST.map(s => keys(S, s)))).flat();
-        const regs = (await Promise.all(all.map(k => S.get(k, { type: 'json' })))).filter(Boolean).map(({ id, name, roll, phone, price, game, status, at }) => ({ id, name, roll, phone, price, game, status, at })).sort((a, c) => c.at - a.at);
+        const regs = (await Promise.all(all.map(k => S.get(k, { type: 'json' })))).filter(Boolean).map(({ id, name, roll, phone, price, game, status, at, refCode, referredBy, leaderRoll, rewardGiven, source, sourceOther }) => ({ id, name, roll, phone, price, game, status, at, refCode, referredBy, leaderRoll, rewardGiven, source, sourceOther })).sort((a, c) => c.at - a.at);
         return J({ max: MAX, regs });
       }
       if (m === 'POST' && p === '/api/admin/set') {
@@ -110,6 +132,14 @@ export default async (req) => {
           await S.setJSON(kk(b.status, r.game, r.id), { ...r, status: b.status });
           await S.delete(kk(r.status, r.game, r.id));
         }
+        return J({ ok: true });
+      }
+      if (m === 'POST' && p === '/api/admin/reward') {
+        const b = await req.json(), r = typeof b.id === 'string' ? await find(S, b.id) : null;
+        if (!r || r.status === 'rejected') return J({ error: 'Bad request' }, 400);
+        const n = (await acceptedRecs(S)).filter(x => x.referredBy === r.refCode).length;
+        if (b.given && n < NEED) return J({ error: 'Not eligible yet: ' + n + '/' + NEED + ' friends verified.' }, 409);
+        await S.setJSON(kk(r.status, r.game, r.id), { ...r, rewardGiven: !!b.given });
         return J({ ok: true });
       }
       if (m === 'GET' && p.startsWith('/api/admin/proof/')) {

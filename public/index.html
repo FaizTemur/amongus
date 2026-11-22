@@ -60,7 +60,8 @@ label{display:block;font-weight:800;font-size:12px;letter-spacing:2px;color:var(
 input[type=text]{width:100%;background:#09070d;border:2px solid #3a3046;border-radius:8px;padding:16px;color:var(--ink);font:600 17px 'Rubik',sans-serif;outline:0;transition:.2s}
 input[type=text]:focus{border-color:var(--go);box-shadow:0 0 0 4px #f5c4512e}
 .rw{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.gm{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.gm button{background:#09070d;border:2px solid #3a3046;border-radius:10px;padding:16px 8px;color:var(--ink);cursor:pointer;font:14px 'Bungee';transition:.15s;text-align:center}.gm button small{display:block;font:600 13px 'Rubik';color:var(--mu);margin-top:6px}.gm button:disabled{opacity:.35;cursor:not-allowed;transform:none!important}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;font:12px 'Bungee'}.two b{font-size:15px}.bar.sm{height:10px;border-width:2px;margin-top:5px}.hs .bar b.cy{background:repeating-linear-gradient(45deg,#2fb8d6,#2fb8d6 10px,#7be9ff 10px,#7be9ff 20px)}
+.gm{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.gm button{background:#09070d;border:2px solid #3a3046;border-radius:10px;padding:16px 8px;color:var(--ink);cursor:pointer;font:14px 'Bungee';transition:.15s;text-align:center}.gm button small{display:block;font:600 13px 'Rubik';color:var(--mu);margin-top:6px}.hw{display:flex;flex-wrap:wrap;gap:10px}.hw button{background:#09070d;border:2px solid #3a3046;border-radius:99px;padding:11px 18px;color:var(--ink);cursor:pointer;font:13px 'Bungee';transition:.15s}.hw button:hover{border-color:var(--go)}.hw button.on{border-color:var(--go);background:#f5c4511f;box-shadow:0 0 0 3px #f5c45144;transform:translateY(-2px)}#ho{display:none;margin-top:12px}
+.gm button:disabled{opacity:.35;cursor:not-allowed;transform:none!important}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;font:12px 'Bungee'}.two b{font-size:15px}.bar.sm{height:10px;border-width:2px;margin-top:5px}.hs .bar b.cy{background:repeating-linear-gradient(45deg,#2fb8d6,#2fb8d6 10px,#7be9ff 10px,#7be9ff 20px)}
 .gm button:hover{border-color:var(--go);transform:translateY(-2px)}.gm button.on{border-color:var(--go);background:#f5c4511f;box-shadow:0 0 0 3px #f5c45155,0 0 30px #f5c45133;transform:translateY(-3px)}.gm button[data-g=among].on{border-color:var(--cy);background:#7be9ff1a;box-shadow:0 0 0 3px #7be9ff55,0 0 30px #7be9ff33}.gm button[data-g=mafia].on{border-color:var(--bl);background:#d9122a22;box-shadow:0 0 0 3px #d9122a77,0 0 30px #d9122a44}
 .pay{background:#09070d;border:2px solid var(--gr);border-radius:8px;padding:18px;display:grid;gap:6px}.pay .h{font:13px 'Bungee';color:var(--gr);letter-spacing:2px}
 .pay .num{font:clamp(26px,5vw,38px) 'Bungee';letter-spacing:2px}.pay span{color:var(--mu)}.pay b{color:var(--go)}
@@ -128,6 +129,18 @@ footer{text-align:center;padding:50px 6vw 120px;color:var(--mu);border-top:2px s
   <ul class="mi"><li>Register with your full name and roll number</li><li>Pay via Easypaisa before the price goes up</li><li>Upload your proof of payment</li><li>Get verified by the STEM Fusion crew</li><li>Show up at COMSATS Lahore and trust nobody</li></ul>
 </section>
 
+<section class="rv">
+  <h2>SQUAD UP · <span>PLAY FREE</span></h2>
+  <p class="sub">Bring 5 friends and your own registration is on the house.</p>
+  <div class="g">
+    <div class="cd"><h3 style="color:var(--go)">① GET YOUR CODE</h3><p>Register and you instantly get your own referral code, like <b>SFS7K2M</b>.</p></div>
+    <div class="cd"><h3 style="color:var(--cy)">② SHARE IT</h3><p>Send your code to 5 friends who haven’t registered yet.</p></div>
+    <div class="cd"><h3 style="color:#ff6b7a">③ THEY JOIN</h3><p>Each friend enters your code in the registration form and pays their own fee.</p></div>
+    <div class="cd"><h3 style="color:var(--gr)">④ YOU PLAY FREE</h3><p>Once all 5 friends are verified by STEM Fusion, your registration is free.</p></div>
+  </div>
+  <p class="sub" style="margin:18px 0 0;font-size:14px">Only verified (paid) registrations count. Duplicates, unpaid and rejected registrations, and using your own code don’t.</p>
+</section>
+
 <section id="register" class="rv">
   <h2>JOIN THE <span>FAMILY</span></h2>
   <p class="sub">Among Us: 95 spots. Mafia Wars: 75 spots. When they’re gone, they’re gone.</p>
@@ -139,6 +152,8 @@ footer{text-align:center;padding:50px 6vw 120px;color:var(--mu);border-top:2px s
     </div>
     <div><label>CHOOSE YOUR GAME</label><div class="gm" id="gm"><button type="button" data-g="among">AMONG US<small id="g1"></small></button><button type="button" data-g="mafia">MAFIA WARS<small id="g2"></small></button><button type="button" data-g="both">BOTH GAMES<small id="g3"></small></button></div></div>
     <div><label for="ph">PHONE / WHATSAPP NO</label><input id="ph" type="text" inputmode="tel" placeholder="e.g. 0300 1234567" autocomplete="tel"></div>
+    <div><label for="rc">REFERRAL CODE (OPTIONAL)</label><input id="rc" type="text" placeholder="Got a code from a friend? e.g. SFS7K2M" autocomplete="off" style="text-transform:uppercase"></div>
+    <div><label>HOW DID YOU HEAR ABOUT US?</label><div class="hw" id="hw"><button type="button" data-h="social">SOCIAL MEDIA</button><button type="button" data-h="c2c">C2C</button><button type="button" data-h="posters">POSTERS</button><button type="button" data-h="desk">DESK</button><button type="button" data-h="other">OTHER</button></div><input id="ho" type="text" maxlength="200" placeholder="Tell us how you heard about the event"></div>
     <div class="pay"><div class="h">① PAY VIA EASYPAISA</div><div class="num">0333 0866555</div><span>Account name: <b>Anshal Abbas</b></span><span>Amount to send: <b id="pa">Rs 350</b> <span id="pn"></span></span><button type="button" class="cp" id="cp">COPY NUMBER</button></div>
     <div><label>② UPLOAD PROOF OF PAYMENT</label><div class="dr" id="dr"><input id="p" type="file" accept="image/*"><span id="dt">📎 Drop or tap to upload payment screenshot</span><img id="pv" alt="Preview"></div></div>
     <p class="er" id="er"></p>
@@ -151,7 +166,7 @@ footer{text-align:center;padding:50px 6vw 120px;color:var(--mu);border-top:2px s
 
 <button id="eb">SIT-DOWN!</button>
 <div id="em">EMERGENCY<br>MEETING</div>
-<div id="ov"><svg id="ovc"><use href="#cm"/></svg><h3 id="ot" class="bg"></h3><div class="ok">✔ REGISTRATION RECEIVED</div><p id="od"></p><p style="font-size:12px">tap anywhere to close</p></div>
+<div id="ov"><svg id="ovc"><use href="#cm"/></svg><h3 id="ot" class="bg"></h3><div class="ok">✔ REGISTRATION RECEIVED</div><div class="bg" id="oc" style="color:var(--go);font-size:clamp(20px,4vw,30px);letter-spacing:4px;margin:2px 0 10px"></div><p id="od"></p><p style="font-size:12px">tap anywhere to close</p></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
@@ -170,6 +185,8 @@ $('cp').onclick=function(){try{navigator.clipboard.writeText('03330866555');this
 var GM=null,GN={among:'AMONG US',mafia:'MAFIA WARS',both:'AMONG US + MAFIA WARS'};
 function pay(){if(!INFO)return;var a=GM?(GM==='both'?INFO.both:INFO.price):0;$('pa').textContent=a?'Rs '+a:'select a game above'}
 $('gm').onclick=function(e){var b=e.target.closest('button');if(!b)return;GM=b.dataset.g;this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});pay();$('er').textContent=''};
+var HW=null;
+$('hw').onclick=function(e){var b=e.target.closest('button');if(!b)return;HW=b.dataset.h;this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});$('ho').style.display=HW==='other'?'block':'none';if(HW==='other')$('ho').focus();$('er').textContent=''};
 // ===== live info =====
 function upd(i){INFO=i;document.querySelectorAll('.sc').forEach(function(e){e.textContent=i.count});$('bc').textContent=i.count;$('hb').style.width=Math.min(100,i.count/i.max*100)+'%';
 var left=i.max-i.count;$('hl').textContent=i.full?'SOLD OUT':left<=20?'ONLY '+left+' LEFT!':left+' SPOTS LEFT';
@@ -223,19 +240,19 @@ $('p').addEventListener('change',function(e){var f=e.target.files[0];if(!f)retur
 var im=new Image();im.onload=function(){var s=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
 proof=c.toDataURL('image/jpeg',.7);$('pv').src=proof;$('pv').style.display='block';$('dt').textContent='✅ '+f.name;$('dr').classList.add('on');$('er').textContent=''};im.src=URL.createObjectURL(f)});
 function typeIt(el,s){el.textContent='';var i=0;(function f(){el.textContent=s.slice(0,++i);if(i<s.length)setTimeout(f,55)})()}
-$('ov').onclick=function(){$('ov').classList.remove('s');$('f').reset();GM=null;document.querySelectorAll('#gm button').forEach(function(x){x.classList.remove('on')});pay();proof=null;$('pv').style.display='none';$('dr').classList.remove('on');$('dt').textContent='📎 Drop or tap to upload payment screenshot';$('go').disabled=!!(INFO&&INFO.full)};
+$('ov').onclick=function(){$('ov').classList.remove('s');$('f').reset();HW=null;document.querySelectorAll('#hw button').forEach(function(x){x.classList.remove('on')});$('ho').style.display='none';GM=null;document.querySelectorAll('#gm button').forEach(function(x){x.classList.remove('on')});pay();proof=null;$('pv').style.display='none';$('dr').classList.remove('on');$('dt').textContent='📎 Drop or tap to upload payment screenshot';$('go').disabled=!!(INFO&&INFO.full)};
 $('go').onclick=async function(){var n=$('n').value.trim(),r=$('r').value.trim(),er=$('er');
-if(n.length<3)return er.textContent='Enter your full name.';if(r.length<4)return er.textContent='Enter your uni roll number.';var ph=$('ph').value.replace(/[\s\-()]/g,'');if(!/^(\+?92|0)3\d{9}$/.test(ph))return er.textContent='Enter a valid mobile number, e.g. 0300 1234567.';if(!GM)return er.textContent='Choose Among Us, Mafia Wars or Both.';if(!proof)return er.textContent='Upload your proof of payment.';
+if(n.length<3)return er.textContent='Enter your full name.';if(r.length<4)return er.textContent='Enter your uni roll number.';var ph=$('ph').value.replace(/[\s\-()]/g,'');if(!/^(\+?92|0)3\d{9}$/.test(ph))return er.textContent='Enter a valid mobile number, e.g. 0300 1234567.';if(!GM)return er.textContent='Choose Among Us, Mafia Wars or Both.';if(!HW)return er.textContent='Tell us how you heard about the event.';if(HW==='other'&&$('ho').value.trim().length<2)return er.textContent='Please explain how you heard about us.';if(!proof)return er.textContent='Upload your proof of payment.';
 $('go').disabled=true;er.textContent='Sending to the Don…';
-try{var res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,roll:r,phone:ph,game:GM,proof:proof})}),j=await res.json();
+try{var res=await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:n,roll:r,phone:ph,game:GM,ref:$('rc').value.trim(),src:HW,srcOther:HW==='other'?$('ho').value.trim():'',proof:proof})}),j=await res.json();
 if(!res.ok){er.textContent=j.error||'Something went wrong.';$('go').disabled=false;load();return}
 er.textContent='';load();$('ov').classList.add('s');typeIt($('ot'),n.toUpperCase()+' WAS NOT THE MAFIA.');
-$('od').textContent='Registered for '+GN[j.game]+' · Rs '+j.price+'. The crew will verify your payment, then you’re officially in. Check your status below any time with your roll number.';$('ovc').style.color=['#d9122a','#2f6bff','#1f9d3a','#ff7bd0','#ffd93b'][Math.random()*5|0]}
+$('od').textContent='Registered for '+GN[j.game]+' · Rs '+j.price+'. The crew will verify your payment, then you’re officially in. Check your status below any time with your roll number. Share your referral code: get 5 friends verified and your registration is FREE.';$('oc').textContent='YOUR CODE: '+j.refCode;$('ovc').style.color=['#d9122a','#2f6bff','#1f9d3a','#ff7bd0','#ffd93b'][Math.random()*5|0]}
 catch(e){er.textContent='Cannot reach the server. Try again.';$('go').disabled=false}};
 $('cb').onclick=async function(){var r=$('cr').value.trim(),o=$('cs');if(r.length<4)return;
 try{var res=await fetch('/api/status?roll='+encodeURIComponent(r)),j=await res.json();
 o.id='cs';var c={pending:['⏳ PENDING VERIFICATION','#f5c451'],accepted:['✅ VERIFIED · YOU’RE IN THE FAMILY','#2ee66b'],rejected:['❌ REJECTED · CONTACT THE CREW','#ff6b7a']}[j.status];
-$('cs').outerHTML='<div id="cs" style="width:100%;font:16px Bungee;color:'+(c?c[1]:'#ff6b7a')+'">'+(c?j.name.toUpperCase()+' ['+(GN[j.game]||'AMONG US')+']: '+c[0]:(j.error||'Not found'))+'</div>'}catch(e){}};
+$('cs').outerHTML='<div id="cs" style="width:100%;font:16px Bungee;color:'+(c?c[1]:'#ff6b7a')+'">'+(c?j.name.toUpperCase()+' ['+(GN[j.game]||'AMONG US')+']: '+c[0]:(j.error||'Not found'))+(c&&j.refCode?'<div style="font:13px Rubik;color:var(--mu);margin-top:8px">YOUR REFERRAL CODE: <b style="color:var(--go);font:16px Bungee">'+j.refCode+'</b> · '+j.refs+'/'+j.need+' friends verified'+(j.refs>=j.need?' · 🎁 FREE REGISTRATION EARNED!':'')+'</div>':'')+'</div>'}catch(e){}};
 </script>
 </body>
 </html>
